@@ -240,7 +240,8 @@ export class Vehicle {
 
 		const steeringGrip = THREE.MathUtils.clamp( Math.abs( this.linearSpeed ), 0.2, 1.0 ) * this.gripMultiplier;
 
-		const targetAngular = - this.inputX * steeringGrip * 4 * direction;
+		// Turning strength scaled to 70% (user order 2026-11-09).
+		const targetAngular = - this.inputX * steeringGrip * 4 * 0.7 * direction;
 		this.angularSpeed = THREE.MathUtils.lerp( this.angularSpeed, targetAngular, dt * 4 );
 
 		this.container.rotateY( this.angularSpeed * dt );
