@@ -4318,7 +4318,26 @@ async function loadModels( requiredNames = modelNames ) {
 
 						// The garage is a walk-in scene, so render both sides of every
 						// surface while the other models keep their normal front faces.
-						if ( name === 'garage' ) child.material.side = THREE.DoubleSide;
+						// Placed buildings are walk-in too (user report 2026-11-11:
+						// driving inside one, whole walls read as blank super-bright
+						// untextured panels). The shells are single-sided and plenty of
+						// them have NO authored interior faces, so from inside those
+						// walls were culled and the bright sky showed through. Two-sided
+						// like the garage makes every interior surface show the building
+						// colormap. shadowSide stays FrontSide — a two-sided shell would
+						// otherwise put its own back faces in the depth pass and self-
+						// shadow into acne stripes (same reason as the AI blocks).
+						if ( name === 'garage' || name.startsWith( 'building-' ) ) {
+
+							( Array.isArray( child.material ) ? child.material : [ child.material ] ).forEach( ( m ) => {
+
+								if ( ! m ) return;
+								m.side = THREE.DoubleSide;
+								m.shadowSide = THREE.FrontSide;
+
+							} );
+
+						}
 						// untitled.glb (empty green plane, Hide Trees mod swap target)
 						// is wound face-down — force two-sided or it renders invisible
 						// from above and leaves see-through holes in the ground.
