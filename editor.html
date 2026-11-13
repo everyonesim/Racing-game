@@ -2095,20 +2095,6 @@ import { createShadowProxyController } from './js/ShadowProxy.js?v=3';
 								} );
 
 							}
-							// Buildings are walk-in in gameplay, so they render two-sided
-							// there (see js/main.js loadModels) — match it so the editor
-							// preview shows the same interior walls instead of the sky.
-							if ( name.startsWith( 'building-' ) ) {
-
-								( Array.isArray( child.material ) ? child.material : [ child.material ] ).forEach( ( m ) => {
-
-									if ( ! m ) return;
-									m.side = THREE.DoubleSide;
-									m.shadowSide = THREE.FrontSide;
-
-								} );
-
-							}
 							// AI-generated blocks: per-face flat shading (their Blender
 							// normals are mixed smooth/flat = blotchy when smooth-shaded)
 							// + only FRONT faces cast shadows (DoubleSide shells
